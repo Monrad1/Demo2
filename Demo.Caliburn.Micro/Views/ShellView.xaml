@@ -1,0 +1,130 @@
+﻿<mah:MetroWindow x:Class="Demo.Caliburn.Micro.Views.ShellView"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:Behaviours="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
+                 xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                 xmlns:properties="clr-namespace:Demo.Caliburn.Micro.Properties"
+                 xmlns:viewModels="clr-namespace:Demo.Caliburn.Micro.ViewModels"
+                 xmlns:interfaces="clr-namespace:Demo.Caliburn.Micro.Models.Interfaces"
+                 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                 xmlns:system="clr-namespace:System;assembly=mscorlib"
+                 xmlns:cal="http://www.caliburnproject.org"
+                 mc:Ignorable="d"
+                 d:DataContext="{d:DesignInstance Type=viewModels:ShellViewModel, IsDesignTimeCreatable=True}"
+                 Title="{x:Static properties:Resources.Title}" Height="800" Width="1100"
+                 TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                 TextElement.FontWeight="Regular"
+                 TextElement.FontSize="13"
+                 TextOptions.TextFormattingMode="Ideal"
+                 TextOptions.TextRenderingMode="Auto"
+                 Background="{DynamicResource MaterialDesignPaper}"
+                 FontFamily="{DynamicResource MaterialDesignFont}">
+  <Window.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary
+          Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+        <ResourceDictionary
+          Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Shadows.xaml" />
+        <ResourceDictionary
+          Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+        <ResourceDictionary
+          Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
+        <ResourceDictionary
+          Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
+        <ResourceDictionary
+          Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Flipper.xaml" />
+        <ResourceDictionary
+          Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+      <BitmapImage x:Key='DefaultImage'
+                   UriSource='pack://application:,,,/Demo.Caliburn.Micro;component/Assets/dummyCar.png' />
+      <BooleanToVisibilityConverter x:Key="btvc" />
+    </ResourceDictionary>
+  </Window.Resources>
+  <materialDesign:DialogHost Identifier="RootDialog">
+    <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
+      <materialDesign:DrawerHost.LeftDrawerContent>
+        <DockPanel MinWidth="212">
+          <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}"
+                        DockPanel.Dock="Top"
+                        HorizontalAlignment="Right" Margin="16"
+                        IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}" />
+          <ComboBox Margin="16, 0, 16, 0"
+                    DockPanel.Dock="Top"
+                    Text="{Binding CurrentSearch, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    materialDesign:HintAssist.Hint="{x:Static properties:Resources.Search}"
+                    IsEditable="True"
+                    Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                    ItemsSource="{Binding SavedSearchesAsString}">
+            <ComboBox.ItemTemplate>
+              <DataTemplate DataType="system:String">
+                <TextBlock Text="{Binding}" />
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+          <ListBox Margin="0 16 0 16" SelectedIndex="0"
+                   ItemsSource="{Binding SavedSearches}">
+            <ListBox.ItemTemplate>
+              <DataTemplate DataType="interfaces:ISavedSearch">
+                <TextBlock Text="{Binding NumberPlate}" Margin="32 0 32 0" cal:Message.Attach="[Event MouseDown] = [Action SetCurrentSearch($dataContext)]"/>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </DockPanel>
+      </materialDesign:DrawerHost.LeftDrawerContent>
+      <DockPanel>
+        <materialDesign:ColorZone Padding="16"
+                                  materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                  Mode="PrimaryDark"
+                                  DockPanel.Dock="Top">
+          <DockPanel>
+            <ToggleButton x:Name="MenuToggleButton"
+                          Style="{StaticResource MaterialDesignHamburgerToggleButton}"
+                          DockPanel.Dock="Left"
+                          HorizontalAlignment="Left" />
+          </DockPanel>
+        </materialDesign:ColorZone>
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition MaxWidth="300" />
+          </Grid.ColumnDefinitions>
+          <materialDesign:Card Margin="10" Padding="10" MinHeight="180">
+            <Grid>
+              <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+              </Grid.RowDefinitions>
+              <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock}" >
+                <Run Text="{Binding Car.Make, FallbackValue='-', Mode=OneWay}"/>
+                <Run Text="{Binding Car.Model, FallbackValue='', Mode=OneWay}"/>
+              </TextBlock>
+            </Grid>
+          </materialDesign:Card>
+          <materialDesign:Card Margin="10" Grid.Column="1" Background="Gray">
+            <Image Source="{Binding Image, TargetNullValue={StaticResource DefaultImage}}"
+                   Height="140"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Stretch="Uniform" />
+          </materialDesign:Card>
+          <mah:ProgressRing Grid.ColumnSpan="2" Visibility="{Binding IsLoadingCar, Converter={StaticResource btvc}}"/>
+        </Grid>
+      </DockPanel>
+    </materialDesign:DrawerHost>
+  </materialDesign:DialogHost>
+  <i:Interaction.Behaviors>
+    <Behaviours:BorderlessWindowBehavior/>
+  </i:Interaction.Behaviors>
+</mah:MetroWindow>
